@@ -6,13 +6,15 @@ http://simplectic.com/story_turtle
 $ = @jQuery
 $.fn.storyturtle = ->
   game = @hide()
+    .width(300)
+    .height(350)
 
   editor = $("<textarea>",
     rows: 15
-    cols: 30).
-    hide().
-    val(game.text()).
-    appendTo(game.text(""))
+    cols: 30)
+    .hide()
+    .val(game.text())
+    .appendTo(game.text(""))
 
   board = $("<div>")
     .width(300)
@@ -20,11 +22,11 @@ $.fn.storyturtle = ->
     .appendTo(game)
 
   speaker = $("<div>")
-    .width(350)
+    .width(300)
     .appendTo(game)
 
-  play = $("<a>", href:'#').
-    text("Play!")
+  play = $("<a>", href:'#')
+    .text("Play!")
     .css(float: "left")
 
   edit = $("<a>", href: '#')
@@ -121,7 +123,7 @@ $.fn.storyturtle = ->
         speaker.text "#{match[1]} says, \"#{match[2]}\""
         cb()
     go:
-      match: /^(\s*)$/
+      match: /^\s*$/
       handle: (match, cb)->
         go cb
 
