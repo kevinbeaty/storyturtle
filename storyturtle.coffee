@@ -3,9 +3,9 @@ storyturtle.js
 License MIT
 http://simplectic.com/story_turtle
 ###
-$ ->
-  game = $("#game")
-    .hide()
+$ = @jQuery
+$.fn.storyturtle = ->
+  game = @hide()
 
   editor = $("<textarea>",
     rows: 15
