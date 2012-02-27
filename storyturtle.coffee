@@ -151,6 +151,24 @@ $.fn.storyturtle = ->
 
     next()
 
+  storage =
+    set: (text) ->
+      name = @nameFromLocation()
+      localStorage?.setItem "storyturtle_#{name}", text
+
+    get: ->
+      name = @nameFromLocation()
+      return localStorage?.getItem "storyturtle_#{name}"
+
+    nameFromLocation: ->
+      name = "#{document.location}"
+      name.replace(/.*\//, '') # Strip all but last path component
+          .replace(/\..*/, '') # Strip extension
+
+  if storedGame = storage.get()
+    # If we previously stored game, load it
+    editor.val(storedGame)
+
   play.click ->
     board.show()
     editor.hide()
@@ -162,6 +180,9 @@ $.fn.storyturtle = ->
     parse gameText, ->
       speaker.text ""
       controls.show()
+
+    storage.set gameText
+
     false
 
   edit.click ->
