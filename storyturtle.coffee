@@ -153,17 +153,13 @@ $.fn.storyturtle = ->
 
   storage =
     set: (text) ->
-      name = @nameFromLocation()
-      localStorage?.setItem "storyturtle_#{name}", text
+      name = game.data "story"
+      if name
+        localStorage?.setItem "storyturtle_#{name}", text
 
     get: ->
-      name = @nameFromLocation()
-      return localStorage?.getItem "storyturtle_#{name}"
-
-    nameFromLocation: ->
-      name = "#{document.location}"
-      name.replace(/.*\//, '') # Strip all but last path component
-          .replace(/\..*/, '') # Strip extension
+      name = game.data "story"
+      return name and localStorage?.getItem "storyturtle_#{name}"
 
   if storedGame = storage.get()
     # If we previously stored game, load it
