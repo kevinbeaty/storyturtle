@@ -7,25 +7,60 @@ $ = @jQuery
 localStorage = @localStorage
 
 storyturtle = {}
+config = {}
+
+$.fn.storyturtle = (options) ->
+  config = $.extend true,
+    images: {} # Maps image type to URL
+    board:
+      width: 300
+      height: 300
+    editor:
+      rows: 15
+      cols: 30
+    controls:
+      width: 300
+      height: 25
+    feature: storyturtle.feature
+  , options
+  @each ->
+    storyturtle.init $(@)
+
+storyturtle.feature = (type, cb) ->
+  if type of config.images
+    img = new Image()
+    img.src = config.images[type]
+    $(img).load ->
+      feature = $("<img>", src:img.src)
+      feature.css
+        width:30
+        height:30
+      cb feature
+
 storyturtle.init = (game) ->
   game.hide()
-    .width(300)
-    .height(350)
+    .width(
+      if config.board.width > config.controls.width
+        config.board.width
+      else
+        config.controls.width)
+    .height(config.board.height+config.controls.height)
 
   editor = $("<textarea>",
-    rows: 15
-    cols: 30)
+    rows: config.editor.rows
+    cols: config.editor.cols)
     .hide()
     .val(game.text())
     .appendTo(game.text(""))
 
   board = $("<div>")
-    .width(300)
-    .height(300)
+    .width(config.board.width)
+    .height(config.board.height)
     .appendTo(game)
 
   speaker = $("<div>")
-    .width(300)
+    .width(config.controls.width)
+    .height(config.controls.height)
     .appendTo(game)
 
   play = $("<a>", href:'#')
@@ -37,7 +72,8 @@ storyturtle.init = (game) ->
     .css(float: "right")
 
   controls = $("<div>")
-    .width(300)
+    .width(config.controls.width)
+    .height(config.controls.height)
     .append(play, edit)
     .appendTo(game)
 
@@ -47,19 +83,17 @@ storyturtle.init = (game) ->
     left:0
     top:0
 
-  create = (cb, name, type, x, y)->
+  create = (cb, name, type, x, y) ->
     feature = features[name]
     feature.remove if feature
-    feature = $("<img>", src: "images/#{type}.png")
-    feature.css
-      position: 'absolute'
-      left:x
-      top:y
-      width:30
-      height:30
-    feature.appendTo board
-    features[name] = feature
-    cb()
+    config.feature type, (feature) ->
+      feature.css
+        position: 'absolute'
+        left:x
+        top:y
+      feature.appendTo board
+      features[name] = feature
+      cb()
 
   move = (cb, name, x, y)->
     feature = features[name]
@@ -89,7 +123,7 @@ storyturtle.init = (game) ->
 
   grammer =
     create:
-      match: /(\w+)\s+is\s+an?\s+(\w+)\s+at\s+([123]?\d?\d)\s+([123]?\d?\d)/
+      match: /(\w+)\s+is\s+an?\s+(\w+)\s+at\s+(\d+)\s+(\d+)/
       handle: (match, cb) ->
         create(cb
           match[1]
@@ -103,7 +137,7 @@ storyturtle.init = (game) ->
         feature.remove() if feature
         cb()
     move:
-      match: /(\w+)\s+moves\s+to\s+([123]?\d?\d)\s+([123]?\d?\d)/
+      match: /(\w+)\s+moves\s+to\s+(\d+)\s+(\d+)/
       handle: (match, cb)->
         move(
           cb
@@ -191,7 +225,3 @@ storyturtle.init = (game) ->
     false
 
   game.show()
-
-$.fn.storyturtle = ->
-  @each ->
-    storyturtle.init $(@)
