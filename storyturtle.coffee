@@ -4,8 +4,11 @@ License MIT
 http://simplectic.com/story_turtle
 ###
 $ = @jQuery
-$.fn.storyturtle = ->
-  game = @hide()
+localStorage = @localStorage
+
+storyturtle = {}
+storyturtle.init = (game) ->
+  game.hide()
     .width(300)
     .height(350)
 
@@ -188,3 +191,7 @@ $.fn.storyturtle = ->
     false
 
   game.show()
+
+$.fn.storyturtle = ->
+  @each ->
+    storyturtle.init $(@)
