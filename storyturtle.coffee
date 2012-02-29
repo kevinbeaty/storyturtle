@@ -31,19 +31,21 @@ storyturtle.feature = (type, cb) ->
     img = new Image()
     img.src = config.images[type]
     $(img).load ->
+      dim = config.board.width / 10
+      width = img.width or dim
+      height = img.height or dim
+      scale = dim/height
+      width *= scale
+      height *= scale
       feature = $("<img>", src:img.src)
       feature.css
-        width:30
-        height:30
+        width:width
+        height:height
       cb feature
 
 storyturtle.init = (game) ->
   game.hide()
-    .width(
-      if config.board.width > config.controls.width
-        config.board.width
-      else
-        config.controls.width)
+    .width(Math.max(config.board.width, config.controls.width))
     .height(config.board.height+config.controls.height)
 
   editor = $("<textarea>",
