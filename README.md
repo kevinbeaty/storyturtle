@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/simplectic/storyturtle.png)](http://travis-ci.org/simplectic/storyturtle)
+
 Story Turtle is a first introduction to programming for
 my kids (ages 8 and 10).  The grammer, images, and [example
 stories][1] were their own creation, as described below.
