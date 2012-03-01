@@ -1,0 +1,17 @@
+{
+  "name": "storyturtle",
+  "version": "0.0.5",
+  "description": "An introduction to programming for kids",
+  "author": "Kevin Beaty <kevin@simplectic.com>",
+  "licenses": [{"type": "MIT"}],
+  "homepage": ["http://simplectic.com/story_turtle"],
+  "repository": {"type": "git", "url": "git://github.com/simplectic/storyturtle.git"},
+  "keywords": [],
+  "dependencies": {},
+  "devDependencies": {
+      "coffee-script": "1.2.x",
+      "vows": "0.6.x",
+      "uglify-js": "1.2.x"
+  },
+  "scripts": {"test": "vows --spec test/*"}
+}
