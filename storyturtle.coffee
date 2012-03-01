@@ -6,25 +6,20 @@ http://simplectic.com/story_turtle
 $ = @jQuery
 localStorage = @localStorage
 
-storyturtle = {}
-config = {}
+storyturtle = if exports? then exports else {}
 
-$.fn.storyturtle = (options) ->
-  config = $.extend true,
-    images: {} # Maps image type to URL
-    board:
-      width: 300
-      height: 300
-    editor:
-      rows: 15
-      cols: 30
-    controls:
-      width: 300
-      height: 25
-    feature: storyturtle.feature
-  , options
-  @each ->
-    storyturtle.init $(@)
+config =
+  images: {} # Maps image type to URL
+  board:
+    width: 300
+    height: 300
+  editor:
+    rows: 15
+    cols: 30
+  controls:
+    width: 300
+    height: 25
+storyturtle.config = config
 
 storyturtle.feature = (type, cb) ->
   if type of config.images
@@ -42,6 +37,15 @@ storyturtle.feature = (type, cb) ->
         width:width
         height:height
       cb feature
+config.feature = storyturtle.feature
+
+if $
+  # Register jquery plugin if in broswer
+  $.fn.storyturtle = (options) ->
+    config = $.extend true, storyturtle.config, options
+    storyturtle.config = config
+    @each ->
+      storyturtle.init $(@)
 
 storyturtle.init = (game) ->
   game.hide()
