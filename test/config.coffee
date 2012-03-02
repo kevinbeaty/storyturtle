@@ -29,7 +29,7 @@ vows
         assert.equal topic.cols, 30
       'rows is 15': (topic)->
         assert.equal topic.rows, 15
-     'when retrieving controls':
+    'when retrieving controls':
       topic: config.controls
       'controls is defined': (topic)->
         assert.isObject topic
@@ -40,8 +40,7 @@ vows
       'height is 25': (topic)->
         assert.equal 25, topic.height
     'when retrieving feature':
-      topic: ->
-        return config.feature
+      topic: -> config.feature
       'it is a function': (topic)->
         assert.isFunction topic
       'it is same as feature': (topic)->
