@@ -14,7 +14,7 @@ task 'build', 'rebuild the merged script for inclusion in the browser', ->
      */
   """
   code = ''
-  for name in ['config', 'feature', 'parser', 'init']
+  for name in ['config', 'actions', 'parser', 'init']
     src = ""+fs.readFileSync "src/#{name}.coffee"
     compiled = compile src, bare:true
     code += """

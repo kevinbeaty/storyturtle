@@ -1,4 +1,7 @@
-{feature} = require './feature'
+{ create
+  move
+  go
+} = require './actions'
 
 parse = (text, config, board, speaker, cb)->
   context = 
@@ -27,50 +30,6 @@ parse = (text, config, board, speaker, cb)->
       go cb, context
 
   next()
-
-create = (cb, context, name, type, x, y) ->
-  {features, board, config} = context
-
-  f = features[name]
-  f.remove if f
-  feature type, config, (f) ->
-    f.css
-      position: 'absolute'
-      left:x
-      top:y
-    f.appendTo board
-    features[name] = f
-    cb()
-
-move = (cb, context, name, x, y)->
-  {features, moveQueue} = context
-
-  f = features[name]
-  f and moveQueue.push
-    feature: f
-    attrs:
-      left:x
-      top:y
-  cb()
-
-go = (cb, context)->
-  {moveQueue} = context
-
-  count = moveQueue.length
-  countdown = ->
-    cb() unless count--
-
-  toMove = moveQueue.pop()
-
-  while toMove
-    toMove.feature.animate(
-      toMove.attrs
-      1000
-      'linear'
-      countdown)
-    toMove = moveQueue.pop()
-
-  countdown()
 
 grammer =
   create:
