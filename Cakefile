@@ -14,14 +14,15 @@ task 'build', 'rebuild the merged script for inclusion in the browser', ->
      */
   """
   code = ''
-  for name in ['config', 'feature', 'storyturtle']
+  for name in ['config', 'feature', 'parser', 'storyturtle']
     src = ""+fs.readFileSync "src/#{name}.coffee"
     compiled = compile src, bare:true
-    code += """
-      require.#{name} = new function() {
-        var exports = this;
+    code += """ 
+      require.#{name} = (function() {
+        var exports = {};
         #{compiled}
-      };
+        return exports;
+      })();
     """
   code = """
     (function(root) {
