@@ -2,7 +2,7 @@
   "name": "storyturtle",
   "version": "0.0.5",
   "description": "An introduction to programming for kids",
-  "author": "Kevin Beaty <kevin@simplectic.com>",
+  "author": "Kevin Beaty",
   "licenses": [{"type": "MIT"}],
   "homepage": ["http://simplectic.com/story_turtle"],
   "repository": {"type": "git", "url": "git://github.com/simplectic/storyturtle.git"},

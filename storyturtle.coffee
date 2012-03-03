@@ -1,17 +1,10 @@
-###
-storyturtle.js
-License MIT
-http://simplectic.com/story_turtle
-###
-self = if exports? then exports else {}
-
-self.features = {}
-self.moveQueue = []
-self.offset =
+exports.features = {}
+exports.moveQueue = []
+exports.offset =
     left:0
     top:0
 
-self.config =
+exports.config =
   images: {} # Maps image type to URL
   board:
     width: 300
@@ -23,8 +16,8 @@ self.config =
     width: 300
     height: 25
 
-self.feature = (type, cb) ->
-  config = self.config
+exports.feature = (type, cb) ->
+  config = exports.config
   if type of config.images
     img = new Image()
     img.src = config.images[type]
@@ -40,23 +33,24 @@ self.feature = (type, cb) ->
         width:width
         height:height
       cb feature
-self.config.feature = self.feature
+exports.config.feature = exports.feature
 
-$ = @jQuery
-if $
-  # Register jquery plugin if in broswer
+# Register jquery plugin if in broswer
+$ = {}
+if jQuery?
+  $ = jQuery
   $.fn.storyturtle = (options) ->
-    self.config = $.extend true, self.config, options
-    self.feature = self.config.feature or self.feature
+    exports.config = $.extend true, exports.config, options
+    exports.feature = exports.config.feature or exports.feature
     @each ->
-      self.init $(@)
+      exports.init $(@)
 
-self.init = (game) ->
-  config = self.config
+exports.init = (game) ->
+  config = exports.config
   game.hide()
     .width(Math.max(config.board.width, config.controls.width))
     .height(config.board.height+config.controls.height)
-  self.game = game
+  exports.game = game
 
   editor = $("<textarea>",
     rows: config.editor.rows
@@ -69,13 +63,13 @@ self.init = (game) ->
     .width(config.board.width)
     .height(config.board.height)
     .appendTo(game)
-  self.board = board
+  exports.board = board
 
   speaker = $("<div>")
     .width(config.controls.width)
     .height(config.controls.height)
     .appendTo(game)
-  self.speaker = speaker
+  exports.speaker = speaker
 
   play = $("<a>", href:'#')
     .text("Play!")
@@ -91,7 +85,7 @@ self.init = (game) ->
     .append(play, edit)
     .appendTo(game)
 
-  storage = self.storage
+  storage = exports.storage
   if storedGame = storage.get()
     # If we previously stored game, load it
     editor.val(storedGame)
@@ -102,10 +96,10 @@ self.init = (game) ->
     edit.show()
     controls.hide()
     gameText = editor.val()
-    self.offset = $(board).offset()
+    exports.offset = $(board).offset()
     board.html ""
 
-    self.parse gameText, ->
+    exports.parse gameText, ->
       speaker.text ""
       controls.show()
 
@@ -121,24 +115,23 @@ self.init = (game) ->
 
   game.show()
 
-localStorage = @localStorage
-self.storage =
+exports.storage =
   set: (text) ->
-    name = self.game.data "story"
+    name = exports.game.data "story"
     if name
       localStorage?.setItem "storyturtle_#{name}", text
 
   get: ->
-    name = self.game.data "story"
+    name = exports.game.data "story"
     return name and localStorage?.getItem "storyturtle_#{name}"
 
-self.parse = (text, cb)->
-  self.features = {}
-  self.moveQueue = []
+exports.parse = (text, cb)->
+  exports.features = {}
+  exports.moveQueue = []
 
   steps = []
   for line in text.split '\n'
-    for own key, check of self.grammer
+    for own key, check of exports.grammer
       match = check.match.exec line
       if match
         steps[steps.length] =
@@ -151,37 +144,37 @@ self.parse = (text, cb)->
     if step
       step.check.handle step.match, next
     else
-      self.go cb
+      exports.go cb
 
   next()
 
-self.create = (cb, name, type, x, y) ->
-  feature = self.features[name]
+exports.create = (cb, name, type, x, y) ->
+  feature = exports.features[name]
   feature.remove if feature
-  self.feature type, (feature) ->
+  exports.feature type, (feature) ->
     feature.css
       position: 'absolute'
       left:x
       top:y
-    feature.appendTo self.board
-    self.features[name] = feature
+    feature.appendTo exports.board
+    exports.features[name] = feature
     cb()
 
-self.move = (cb, name, x, y)->
-  feature = self.features[name]
-  feature and self.moveQueue.push
+exports.move = (cb, name, x, y)->
+  feature = exports.features[name]
+  feature and exports.moveQueue.push
     feature: feature
     attrs:
       left:x
       top:y
   cb()
 
-self.go = (cb)->
-  count = self.moveQueue.length
+exports.go = (cb)->
+  count = exports.moveQueue.length
   countdown = ->
     cb() unless count--
 
-  toMove = self.moveQueue.pop()
+  toMove = exports.moveQueue.pop()
 
   while toMove
     toMove.feature.animate(
@@ -189,16 +182,16 @@ self.go = (cb)->
       1000
       'linear'
       countdown)
-    toMove = self.moveQueue.pop()
+    toMove = exports.moveQueue.pop()
 
   countdown()
 
-self.grammer =
+exports.grammer =
   create:
     match: /(\w+)\s+is\s+an?\s+(\w+)\s+at\s+(\d+)\s+(\d+)/
     handle: (match, cb) ->
-      offset = self.offset
-      self.create(cb
+      offset = exports.offset
+      exports.create(cb
         match[1]
         match[2]
         parseInt(match[3], 10) + offset.left
@@ -206,14 +199,14 @@ self.grammer =
   die:
     match: /(\w+)\s+dies/
     handle: (match, cb) ->
-      feature = self.features[match[1]]
+      feature = exports.features[match[1]]
       feature.remove() if feature
       cb()
   move:
     match: /(\w+)\s+moves\s+to\s+(\d+)\s+(\d+)/
     handle: (match, cb)->
-      offset = self.offset
-      self.move(
+      offset = exports.offset
+      exports.move(
         cb
         match[1]
         parseInt(match[2], 10) + offset.left
@@ -226,14 +219,14 @@ self.grammer =
   say:
     match: /say\s+(.+)/
     handle: (match, cb)->
-      self.speaker.text match[1]
+      exports.speaker.text match[1]
       cb()
   says:
     match: /(\w+)\s+says\s+(.*)/
     handle: (match, cb)->
-      self.speaker.text "#{match[1]} says, \"#{match[2]}\""
+      exports.speaker.text "#{match[1]} says, \"#{match[2]}\""
       cb()
   go:
     match: /^\s*$/
     handle: (match, cb)->
-      self.go cb
+      exports.go cb
