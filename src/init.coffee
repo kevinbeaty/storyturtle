@@ -8,13 +8,12 @@ if jQuery?
   $.fn.storyturtle = (options) ->
     config = $.extend true, config, options
     @each ->
-      exports.init $(@)
+      init $(@)
 
-exports.init = (game) ->
+init = (game) ->
   game.hide()
     .width(Math.max(config.board.width, config.controls.width))
     .height(config.board.height+config.controls.height)
-  exports.game = game
 
   editor = $("<textarea>",
     rows: config.editor.rows
@@ -27,13 +26,11 @@ exports.init = (game) ->
     .width(config.board.width)
     .height(config.board.height)
     .appendTo(game)
-  exports.board = board
 
   speaker = $("<div>")
     .width(config.controls.width)
     .height(config.controls.height)
     .appendTo(game)
-  exports.speaker = speaker
 
   play = $("<a>", href:'#')
     .text("Play!")
@@ -49,7 +46,7 @@ exports.init = (game) ->
     .append(play, edit)
     .appendTo(game)
 
-  storage = exports.storage
+  storage = store game
   if storedGame = storage.get()
     # If we previously stored game, load it
     editor.val(storedGame)
@@ -78,13 +75,12 @@ exports.init = (game) ->
 
   game.show()
 
-exports.storage =
+store = (game)->
   set: (text) ->
-    name = exports.game.data "story"
+    name = game.data "story"
     if name
       localStorage?.setItem "storyturtle_#{name}", text
 
   get: ->
-    name = exports.game.data "story"
+    name = game.data "story"
     return name and localStorage?.getItem "storyturtle_#{name}"
-

@@ -1,6 +1,6 @@
 {feature} = require './feature'
 
-exports.parse = (text, config, board, speaker, cb)->
+parse = (text, config, board, speaker, cb)->
   context = 
     config: config
     board: board
@@ -11,7 +11,7 @@ exports.parse = (text, config, board, speaker, cb)->
 
   steps = []
   for line in text.split '\n'
-    for own key, check of exports.grammer
+    for own key, check of grammer
       match = check.match.exec line
       if match
         steps[steps.length] =
@@ -24,11 +24,11 @@ exports.parse = (text, config, board, speaker, cb)->
     if step
       step.check.handle next, context, step.match
     else
-      exports.go cb, context
+      go cb, context
 
   next()
 
-exports.create = (cb, context, name, type, x, y) ->
+create = (cb, context, name, type, x, y) ->
   {features, board, config} = context
 
   f = features[name]
@@ -42,7 +42,7 @@ exports.create = (cb, context, name, type, x, y) ->
     features[name] = f
     cb()
 
-exports.move = (cb, context, name, x, y)->
+move = (cb, context, name, x, y)->
   {features, moveQueue} = context
 
   f = features[name]
@@ -53,7 +53,7 @@ exports.move = (cb, context, name, x, y)->
       top:y
   cb()
 
-exports.go = (cb, context)->
+go = (cb, context)->
   {moveQueue} = context
 
   count = moveQueue.length
@@ -72,12 +72,12 @@ exports.go = (cb, context)->
 
   countdown()
 
-exports.grammer =
+grammer =
   create:
     match: /(\w+)\s+is\s+an?\s+(\w+)\s+at\s+(\d+)\s+(\d+)/
     handle: (cb, context, match) ->
       {offset} = context 
-      exports.create(cb, context,
+      create(cb, context,
         match[1]
         match[2]
         parseInt(match[3], 10) + offset.left
@@ -93,7 +93,7 @@ exports.grammer =
     match: /(\w+)\s+moves\s+to\s+(\d+)\s+(\d+)/
     handle: (cb, context, match)->
       {offset} = context 
-      exports.move(
+      move(
         cb, context,
         match[1]
         parseInt(match[2], 10) + offset.left
@@ -118,4 +118,7 @@ exports.grammer =
   go:
     match: /^\s*$/
     handle: (cb, context, match)->
-      exports.go cb, context
+      go cb, context
+
+exports.parse = parse
+exports.grammer = grammer

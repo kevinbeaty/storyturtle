@@ -1,4 +1,4 @@
-exports.feature = (type, config, cb) ->
+feature = (type, config, cb) ->
   if type of config.images
     img = new Image()
     img.src = config.images[type]
@@ -14,3 +14,5 @@ exports.feature = (type, config, cb) ->
         width:width
         height:height
       cb feature
+
+exports.feature = feature

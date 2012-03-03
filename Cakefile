@@ -14,22 +14,29 @@ task 'build', 'rebuild the merged script for inclusion in the browser', ->
      */
   """
   code = ''
-  for name in ['config', 'feature', 'parser', 'storyturtle']
+  for name in ['config', 'feature', 'parser', 'init']
     src = ""+fs.readFileSync "src/#{name}.coffee"
     compiled = compile src, bare:true
-    code += """ 
-      require.#{name} = (function() {
-        var exports = {};
-        #{compiled}
-        return exports;
-      })();
-    """
+    code += """
+
+      #{package.name}.#{name} = (function(exports) {
+      #{compiled}
+      return exports;
+      })({});
+
+      """
+
   code = """
     (function(root) {
-      function require(path){ return require[/(\\w+)\\.?.*$/.exec(path)[1]]; }
-      #{code}
+    var #{package.name}, require;
+    #{package.name} = {};
+    require = function(path){
+        var mod = /(\\w+)\\.?.*$/.exec(path)[1];
+        return #{package.name}[mod];
+    }
+    #{code}
     }(this));
-  """
+    """
   unless process.env.MINIFY is 'false'
     {parser, uglify} = require 'uglify-js'
     code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle parser.parse code

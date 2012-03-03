@@ -1,4 +1,4 @@
-exports.config =
+config =
   images: {} # Maps image type to URL
   board:
     width: 300
@@ -9,3 +9,5 @@ exports.config =
   controls:
     width: 300
     height: 25
+
+exports.config = config
