@@ -1,4 +1,5 @@
-feature = (type, config, cb) ->
+feature = (type, context, cb) ->
+  {config} = context
   if type of config.images
     img = new Image()
     img.src = config.images[type]
@@ -16,11 +17,11 @@ feature = (type, config, cb) ->
       cb f
 
 create = (cb, context, name, type, x, y) ->
-  {features, board, config} = context
+  {features, board} = context
 
   f = features[name]
-  f.remove if f
-  feature type, config, (f) ->
+  f.remove() if f
+  feature type, context, (f) ->
     f.css
       position: 'absolute'
       left:x
@@ -28,6 +29,12 @@ create = (cb, context, name, type, x, y) ->
     f.appendTo board
     features[name] = f
     cb()
+
+die = (cb, context, name) ->
+  {features} = context
+  f = features[name]
+  f.remove() if f
+  cb()
 
 move = (cb, context, name, x, y)->
   {features, moveQueue} = context
@@ -59,6 +66,23 @@ go = (cb, context)->
 
   countdown()
 
+pause = (cb, context, time)->
+  setTimeout cb, time
+
+say = (cb, context, text)->
+  {speaker} = context
+  speaker.text text
+  cb()
+
+says = (cb, context, name, text)->
+  {speaker} = context
+  speaker.text "#{name} says, \"#{text}\""
+  cb()
+
 exports.create = create
+exports.die = die
 exports.move = move
 exports.go = go
+exports.pause = pause
+exports.say = say
+exports.says = says

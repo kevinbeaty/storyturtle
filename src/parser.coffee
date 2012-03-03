@@ -1,6 +1,10 @@
 { create
+  die
   move
   go
+  pause
+  say
+  says
 } = require './actions'
 
 parse = (text, config, board, speaker, cb)->
@@ -36,44 +40,43 @@ grammer =
     match: /(\w+)\s+is\s+an?\s+(\w+)\s+at\s+(\d+)\s+(\d+)/
     handle: (cb, context, match) ->
       {offset} = context 
-      create(cb, context,
-        match[1]
-        match[2]
-        parseInt(match[3], 10) + offset.left
-        parseInt(match[4], 10) + offset.top)
+      [_, name, type, x, y] = match
+      create cb, context,
+        name
+        type
+        parseInt(x, 10) + offset.left
+        parseInt(y, 10) + offset.top
   die:
     match: /(\w+)\s+dies/
     handle: (cb, context, match) ->
-      {features} = context
-      f = features[match[1]]
-      f.remove() if f
-      cb()
+      [_, name] = match
+      die cb, context, name
   move:
     match: /(\w+)\s+moves\s+to\s+(\d+)\s+(\d+)/
     handle: (cb, context, match)->
-      {offset} = context 
-      move(
-        cb, context,
-        match[1]
-        parseInt(match[2], 10) + offset.left
-        parseInt(match[3], 10) + offset.top)
+      {offset} = context
+      [_, name, x, y] = match
+      move cb, context,
+        name
+        parseInt(x, 10) + offset.left
+        parseInt(y, 10) + offset.top
   pause:
     match: /pause\s+(\d+)/
     handle: (cb, context, match)->
-      setTimeout(cb
-        parseInt(match[1], 10) * 10)
+      [_, time] = match
+      pause cb, context, parseInt(time, 10) * 10
   say:
     match: /say\s+(.+)/
     handle: (cb, context, match)->
       {speaker} = context
-      speaker.text match[1]
-      cb()
+      [_, text] = match
+      say cb, context, text
   says:
     match: /(\w+)\s+says\s+(.*)/
     handle: (cb, context, match)->
       {speaker} = context
-      speaker.text "#{match[1]} says, \"#{match[2]}\""
-      cb()
+      [_, name, text] = match
+      says cb, context, name, text
   go:
     match: /^\s*$/
     handle: (cb, context, match)->
