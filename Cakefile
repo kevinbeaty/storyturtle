@@ -15,17 +15,17 @@ task 'build', 'rebuild the merged script for inclusion in the browser', ->
   """
   code = ''
   for name in ['storyturtle']
-    src = ""+fs.readFileSync name+".coffee"
+    src = ""+fs.readFileSync "src/#{name}.coffee"
     compiled = compile src, bare:true
     code += """
-      require['./#{name}'] = new function() {
+      require.#{name} = new function() {
         var exports = this;
         #{compiled}
       };
     """
   code = """
     (function(root) {
-      function require(path){ return require[path]; }
+      function require(path){ return require[/(\\w+)\\.?.*$/.exec(path)[1]]; }
       #{code}
     }(this));
   """
