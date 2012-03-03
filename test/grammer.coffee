@@ -1,7 +1,7 @@
 vows = require 'vows'
 assert = require 'assert'
 
-{grammer} = require '../storyturtle'
+{grammer} = require '../src/storyturtle'
 
 { create
   die

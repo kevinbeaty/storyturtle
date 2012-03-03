@@ -1,52 +1,23 @@
+{config} = require './config'
+{feature} = require './feature'
+
 exports.features = {}
 exports.moveQueue = []
 exports.offset =
     left:0
     top:0
 
-exports.config =
-  images: {} # Maps image type to URL
-  board:
-    width: 300
-    height: 300
-  editor:
-    rows: 15
-    cols: 30
-  controls:
-    width: 300
-    height: 25
-
-exports.feature = (type, cb) ->
-  config = exports.config
-  if type of config.images
-    img = new Image()
-    img.src = config.images[type]
-    $(img).load ->
-      dim = config.board.width / 10
-      width = img.width or dim
-      height = img.height or dim
-      scale = dim/height
-      width *= scale
-      height *= scale
-      feature = $("<img>", src:img.src)
-      feature.css
-        width:width
-        height:height
-      cb feature
-exports.config.feature = exports.feature
 
 # Register jquery plugin if in broswer
 $ = {}
 if jQuery?
   $ = jQuery
   $.fn.storyturtle = (options) ->
-    exports.config = $.extend true, exports.config, options
-    exports.feature = exports.config.feature or exports.feature
+    config = $.extend true, config, options
     @each ->
       exports.init $(@)
 
 exports.init = (game) ->
-  config = exports.config
   game.hide()
     .width(Math.max(config.board.width, config.controls.width))
     .height(config.board.height+config.controls.height)
@@ -149,21 +120,21 @@ exports.parse = (text, cb)->
   next()
 
 exports.create = (cb, name, type, x, y) ->
-  feature = exports.features[name]
-  feature.remove if feature
-  exports.feature type, (feature) ->
-    feature.css
+  f = exports.features[name]
+  f.remove if f
+  feature type, config, (f) ->
+    f.css
       position: 'absolute'
       left:x
       top:y
-    feature.appendTo exports.board
-    exports.features[name] = feature
+    f.appendTo exports.board
+    exports.features[name] = f
     cb()
 
 exports.move = (cb, name, x, y)->
-  feature = exports.features[name]
-  feature and exports.moveQueue.push
-    feature: feature
+  f = exports.features[name]
+  f and exports.moveQueue.push
+    feature: f
     attrs:
       left:x
       top:y
@@ -199,8 +170,8 @@ exports.grammer =
   die:
     match: /(\w+)\s+dies/
     handle: (match, cb) ->
-      feature = exports.features[match[1]]
-      feature.remove() if feature
+      f = exports.features[match[1]]
+      f.remove() if f
       cb()
   move:
     match: /(\w+)\s+moves\s+to\s+(\d+)\s+(\d+)/

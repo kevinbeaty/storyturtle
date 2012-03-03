@@ -1,6 +1,6 @@
 vows = require 'vows'
 assert = require 'assert'
-{config, feature} = require '../storyturtle'
+{config} = require '../src/config'
 
 vows
   .describe('Config Test')
@@ -39,10 +39,4 @@ vows
         assert.equal config.board.width, topic.width
       'height is 25': (topic)->
         assert.equal 25, topic.height
-    'when retrieving feature':
-      topic: -> config.feature
-      'it is a function': (topic)->
-        assert.isFunction topic
-      'it is same as feature': (topic)->
-        assert.equal topic, feature
   .export(module)

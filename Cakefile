@@ -9,12 +9,12 @@ task 'build', 'rebuild the merged script for inclusion in the browser', ->
      * #{package.name} v#{package.version}
      * #{package.homepage}
      *
-     * Copyright 2012, #{package.author} 
-     * License: #{(license.type for license in package.licenses).join ' '} 
+     * Copyright 2012, #{package.author}
+     * License: #{(license.type for license in package.licenses).join ' '}
      */
   """
   code = ''
-  for name in ['storyturtle']
+  for name in ['config', 'feature', 'storyturtle']
     src = ""+fs.readFileSync "src/#{name}.coffee"
     compiled = compile src, bare:true
     code += """
@@ -33,5 +33,5 @@ task 'build', 'rebuild the merged script for inclusion in the browser', ->
     {parser, uglify} = require 'uglify-js'
     code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle parser.parse code
   builddir = process.env.BUILDDIR or './build'
-  buildfile = "#{builddir}/#{package.name}-#{package.version}.js" 
+  buildfile = "#{builddir}/#{package.name}-#{package.version}.js"
   fs.writeFile buildfile, header + '\n' + code
