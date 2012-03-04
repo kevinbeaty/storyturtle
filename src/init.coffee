@@ -1,5 +1,6 @@
 {config} = require './config'
 {parse} = require './parser'
+{Actions} = require './actions'
 
 # Register jquery plugin if in broswer
 $ = {}
@@ -59,7 +60,7 @@ init = (game) ->
     gameText = editor.val()
     board.html ""
 
-    parse gameText, config, board, speaker, ->
+    parse gameText, new Actions(config, board, speaker), ->
       speaker.text ""
       controls.show()
 

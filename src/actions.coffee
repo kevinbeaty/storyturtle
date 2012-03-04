@@ -1,88 +1,85 @@
-feature = (type, context, cb) ->
-  {config} = context
-  if type of config.images
-    img = new Image()
-    img.src = config.images[type]
-    $(img).load ->
-      dim = config.board.width / 10
-      width = img.width or dim
-      height = img.height or dim
-      scale = dim/height
-      width *= scale
-      height *= scale
-      f = $("<img>", src:img.src)
-      f.css
-        width:width
-        height:height
-      cb f
+class Actions
+  constructor: (@config, @board, @speaker)->
+    @offset = @board.offset()
+    @features = {}
+    @moveQueue = []
 
-create = (cb, context, name, type, x, y) ->
-  {features, board} = context
+  create: (name, type, x, y, cb)->
+    x += @offset.left
+    y += @offset.top
 
-  f = features[name]
-  f.remove() if f
-  feature type, context, (f) ->
-    f.css
-      position: 'absolute'
-      left:x
-      top:y
-    f.appendTo board
-    features[name] = f
+    feature = @features[name]
+    feature.remove() if feature
+    @feature type, (feature) =>
+      feature.css
+        position: 'absolute'
+        left:x
+        top:y
+      feature.appendTo @board
+      @features[name] = feature
+      cb()
+
+  die: (name, cb)->
+    feature = @features[name]
+    feature.remove() if feature
     cb()
 
-die = (cb, context, name) ->
-  {features} = context
-  f = features[name]
-  f.remove() if f
-  cb()
+  move: (name, x, y, cb)->
+    x += @offset.left
+    y += @offset.top
 
-move = (cb, context, name, x, y)->
-  {features, moveQueue} = context
+    feature = @features[name]
+    feature and @moveQueue.push
+      feature: feature
+      attrs:
+        left:x
+        top:y
+    cb()
 
-  f = features[name]
-  f and moveQueue.push
-    feature: f
-    attrs:
-      left:x
-      top:y
-  cb()
+  go: (cb)->
+    count = @moveQueue.length
+    countdown = ->
+      cb() unless count--
 
-go = (cb, context)->
-  {moveQueue} = context
+    toMove = @moveQueue.pop()
 
-  count = moveQueue.length
-  countdown = ->
-    cb() unless count--
+    while toMove
+      toMove.feature.animate(
+        toMove.attrs
+        1000
+        'linear'
+        countdown)
+      toMove = @moveQueue.pop()
 
-  toMove = moveQueue.pop()
+    countdown()
 
-  while toMove
-    toMove.feature.animate(
-      toMove.attrs
-      1000
-      'linear'
-      countdown)
-    toMove = moveQueue.pop()
+  pause: (time, cb)->
+    setTimeout cb, time * 10
 
-  countdown()
+  say:(text, cb)->
+    @speaker.text text
+    cb()
 
-pause = (cb, context, time)->
-  setTimeout cb, time
+  says: (name, text, cb)->
+    @speaker.text "#{name} says, \"#{text}\""
+    cb()
 
-say = (cb, context, text)->
-  {speaker} = context
-  speaker.text text
-  cb()
+  feature: (type, cb) ->
+    config = @config
+    if type of config.images
+      img = new Image()
+      img.src = config.images[type]
+      $(img).load ->
+        dim = config.board.width / 10
+        width = img.width or dim
+        height = img.height or dim
+        scale = dim/height
+        width *= scale
+        height *= scale
+        feature = $("<img>", src:img.src)
+        feature.css
+          width:width
+          height:height
+        cb feature
 
-says = (cb, context, name, text)->
-  {speaker} = context
-  speaker.text "#{name} says, \"#{text}\""
-  cb()
-
-exports.create = create
-exports.die = die
-exports.move = move
-exports.go = go
-exports.pause = pause
-exports.say = say
-exports.says = says
+exports.Actions = Actions

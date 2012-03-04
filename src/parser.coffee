@@ -1,21 +1,4 @@
-{ create
-  die
-  move
-  go
-  pause
-  say
-  says
-} = require './actions'
-
-parse = (text, config, board, speaker, cb)->
-  context = 
-    config: config
-    board: board
-    speaker: speaker
-    offset: board.offset()
-    features: {}
-    moveQueue: []
-
+parse = (text, actions, cb)->
   steps = []
   for line in text.split '\n'
     for own key, check of grammer
@@ -29,58 +12,47 @@ parse = (text, config, board, speaker, cb)->
   next = ->
     step = steps[idx++]
     if step
-      step.check.handle next, context, step.match
+      step.check.handle step.match, actions, next
     else
-      go cb, context
+      actions.go cb
 
   next()
 
 grammer =
   create:
     match: /(\w+)\s+is\s+an?\s+(\w+)\s+at\s+(\d+)\s+(\d+)/
-    handle: (cb, context, match) ->
-      {offset} = context 
+    handle: (match, actions, cb) ->
       [_, name, type, x, y] = match
-      create cb, context,
-        name
-        type
-        parseInt(x, 10) + offset.left
-        parseInt(y, 10) + offset.top
+      actions.create name, type, parseInt(x, 10), parseInt(y, 10), cb
   die:
     match: /(\w+)\s+dies/
-    handle: (cb, context, match) ->
+    handle: (match, actions, cb) ->
       [_, name] = match
-      die cb, context, name
+      actions.die name, cb
   move:
     match: /(\w+)\s+moves\s+to\s+(\d+)\s+(\d+)/
-    handle: (cb, context, match)->
-      {offset} = context
+    handle: (match, actions, cb)->
       [_, name, x, y] = match
-      move cb, context,
-        name
-        parseInt(x, 10) + offset.left
-        parseInt(y, 10) + offset.top
+      actions.move name, parseInt(x, 10), parseInt(y, 10), cb
   pause:
     match: /pause\s+(\d+)/
-    handle: (cb, context, match)->
+    handle: (match, actions, cb)->
       [_, time] = match
-      pause cb, context, parseInt(time, 10) * 10
+      actions.pause parseInt(time, 10), cb
   say:
     match: /say\s+(.+)/
-    handle: (cb, context, match)->
-      {speaker} = context
+    handle: (match, actions, cb)->
       [_, text] = match
-      say cb, context, text
+      actions.say text, cb
   says:
     match: /(\w+)\s+says\s+(.*)/
-    handle: (cb, context, match)->
-      {speaker} = context
+    handle: (match, actions, cb)->
       [_, name, text] = match
-      says cb, context, name, text
+      actions.says name, text, cb
   go:
     match: /^\s*$/
-    handle: (cb, context, match)->
-      go cb, context
+    handle: (match, actions, cb)->
+      actions.go cb
 
 exports.parse = parse
 exports.grammer = grammer
