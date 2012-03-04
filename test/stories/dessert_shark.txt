@@ -1,0 +1,36 @@
+sally is a lizard at 46 81
+lizzy is a lizard at 164 53
+webber is a lizard at 132 142
+fred is a lizard at 96 53
+ashley is a lizard at 64 73
+
+sally moves to 164 53 
+lizzy moves to 132 142
+webber moves to 96 53
+fred moves to 64 73
+ashley moves to 46 81
+
+bob is a shark at 69 231
+sally moves to 94 168
+
+bob moves to 94 168
+sally dies 
+webber moves to 82 154
+
+bob moves to 132 142
+lizzy dies
+
+webber moves to 132 142
+fred dies 
+ashley dies
+
+bob dies
+webber moves to 232 148
+
+webber moves to 233 149
+
+webber moves to 234 150
+
+webber moves to 264 15
+
+webber dies

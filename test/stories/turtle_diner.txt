@@ -1,0 +1,17 @@
+say turtle diner
+
+bob is a shark at 123 134
+pause 100
+ 
+silly is a turtle at 56 123
+pause 200
+
+bob says i'm hungry 
+pause 300
+
+silly moves to 123 134
+
+bob dies
+
+silly says bye bye bob
+pause 123

@@ -20,6 +20,9 @@ class MockFeature
     cb()
 
 class MockSpeaker
+  constructor: ()->
+    @_text = ""
+
   text: (text)->
     @_text = text
 

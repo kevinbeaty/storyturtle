@@ -1,0 +1,42 @@
+bob is a shark at 20 30
+say Turtle Dinner
+pause 100
+
+bob says I'm hungry!
+pause 100
+
+fred is a turtle at 200 200
+bob says Yum! Turtle!
+pause 120
+
+fred says Ahh!!!
+bob moves to 200 200
+
+fred dies
+bob says Yum!
+
+bob says i like turtle, could i have more?
+pause 240
+
+1 is a turtle at 56 74
+2 is a turtle at 146 28
+greeny is a turtle at 21 185
+
+bob says yum yum!
+
+bob moves to 146 28
+2 dies
+
+bob moves to 56 74
+1 dies
+greeny moves to 231 42
+bob says i'll get you
+pause 150
+
+bob moves to 21 152
+greeny says whatever.
+
+greeny moves to 21 152
+bob dies
+
+greeny says yummy!

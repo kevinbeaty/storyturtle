@@ -1,0 +1,25 @@
+what is a shrimp at 170 123
+cool is a pufferfish at 100 123
+sting is a jellyfish at 100 100
+deadly is a shark at 270 123
+buck is a turtle at 1 250
+grace is a shark at 12 67
+
+grace moves to 1 250
+deadly moves to 170 123
+
+what dies
+
+deadly moves to 100 123
+
+cool dies
+buck dies
+sting moves to 1 250
+
+grace dies
+deadly moves to 1 250
+
+sting dies
+deadly moves to 150 250
+
+deadly moves to 234 213

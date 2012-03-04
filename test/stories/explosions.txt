@@ -1,0 +1,44 @@
+edd is a shark at 43 145
+fred is a pufferfish at 65 176
+bed is a jellyfish at 154 173
+bob is a shrimp at 234 6
+
+edd moves to 53 245
+fred moves to 45 166
+bed moves to 35 193
+bob moves to 6 82
+
+edd moves to 63 235
+fred moves to 55 156
+bed moves to 45 183
+bob moves to 16 72
+
+edd dies
+fred moves to 75 16
+bed moves to 143 261
+bob dies
+
+fred moves to 169 27
+bed moves to 160 57
+
+fred moves to 159 37
+bed moves to 159 67
+
+fred dies 
+bed moves to 225 225
+
+edd is a shark at 243 174
+bed moves to 243 174
+
+bed dies 
+edd moves to 163 28
+
+edd moves to 243 17
+
+edd moves to 163 28 
+
+edd moves to 243 16
+
+edd moves to 52 167
+
+edd dies

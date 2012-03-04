@@ -1,0 +1,8 @@
+queen is a shark at 123 234
+nolan is a leopard at 234 65
+fock is a lizard at 256 145
+berkely is a lizard at 145 123
+
+nolan moves to 123 235
+
+nolan dies

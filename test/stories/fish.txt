@@ -1,0 +1,32 @@
+dagger is a shark at 42 87
+mean is a shark at 143 59
+spike is a pufferfish at 34 9
+spine is a pufferfish at 12 49
+red is a shrimp at 67 183
+sting is a jellyfish at 113 134
+
+dagger moves to 38 156
+mean moves to 156 57
+spike moves to 176 134
+spine moves to 16 234
+red moves to 83 170
+sting moves to 106 42
+
+speed is a turtle at 57 58
+dagger moves to 176 134 
+mean dies
+spike moves to 60 138
+spine moves to 24 107
+red moves to 83 165
+sting dies
+
+speed moves to 39 268
+dagger dies
+spine dies
+spike dies
+red moves to 116 35
+
+speed moves to 39 186
+red moves to 39 231
+
+red moves to 42 241
