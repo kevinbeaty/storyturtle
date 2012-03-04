@@ -10,8 +10,9 @@
   "dependencies": {},
   "devDependencies": {
       "coffee-script": "1.2.x",
-      "vows": "0.6.x",
+      "mocha": "0.14.x",
+      "should": "0.6.x",
       "uglify-js": "1.2.x"
   },
-  "scripts": {"test": "vows --spec test/*.coffee"}
+  "scripts": {"test": "mocha -C -R spec test/*.coffee"}
 }
