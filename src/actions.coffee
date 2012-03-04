@@ -7,8 +7,7 @@ class Actions
     x += @offset.left
     y += @offset.top
 
-    feature = @features[name]
-    feature.remove() if feature
+    @_remove name
     @feature type, (feature) =>
       feature.css
         position: 'absolute'
@@ -19,9 +18,14 @@ class Actions
       cb()
 
   die: (name, cb)->
-    feature = @features[name]
-    feature.remove() if feature
+    @_remove name
     cb()
+
+  _remove: (name)->
+    feature = @features[name]
+    if feature
+      feature.remove()
+      delete @features[name]
 
   move: (name, x, y, cb)->
     x += @offset.left
