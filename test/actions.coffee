@@ -3,19 +3,6 @@ should = require 'should'
 {Actions} = require '../src/actions'
 {MockActions} = require './mock/actions'
 
-threadActions = (steps, cb)->
-  actions = new MockActions
-  idx = 0
-  next = (steps)->
-    step = steps[idx++]
-    if step?
-      params = step[1...]
-      params[params.length] = next
-      actions[step[0]].apply actions, params
-    else
-      cb actions
-  next steps
-
 describe 'Actions Test', ->
   describe 'creating action', ->
     it 'exists', ->
@@ -57,27 +44,70 @@ describe 'Actions Test', ->
       for f in ['create', 'die', 'move', 'go', 'pause', 'say', 'says']
         actions[f].should.be.a 'function'
 
-  describe 'create bob', ->
+  describe 'create and die', ->
     it 'should add bob', (done)->
       actions = new MockActions
       actions.create 'bob', 'dog', 12, 13, ->
-        bob = actions.features['bob']
+        {bob} = actions.features
         should.exist bob
         actions.board.should.include bob
         bob.left.should.eql 12+actions.offset.left
         bob.top.should.eql 13+actions.offset.top
         done()
-  describe 'create bob and frank and bob dies', ->
-    it 'should add frank', (done)->
+    it 'should add frank but remove bob when bob dies', (done)->
       actions = new MockActions
       actions.create 'bob', 'dog', 12, 13, ->
         actions.create 'frank', 'cat', 48, 81, ->
           actions.die 'bob', ->
-            bob = actions.features['bob']
-            frank = actions.features['frank']
+            {bob, frank} = actions.features
             should.not.exist bob
             should.exist frank
             actions.board.should.include frank
             frank.left.should.eql 48+actions.offset.left
             frank.top.should.eql 81+actions.offset.top
             done()
+  describe 'create, move and go', ->
+    it 'should move bob', (done)->
+      actions = new MockActions
+      actions.create 'bob', 'dog', 12, 13, ->
+        actions.move 'bob', 32, 33, ->
+          actions.go ->
+            {bob} = actions.features
+            should.exist bob
+            actions.board.should.include bob
+            bob.left.should.eql 32+actions.offset.left
+            bob.top.should.eql 33+actions.offset.top
+            done()
+    it 'should move bob and frank', (done)->
+      actions = new MockActions
+      actions.create 'bob', 'dog', 12, 13, ->
+        actions.create 'frank', 'cat', 48, 81, ->
+          actions.move 'bob', 32, 33, ->
+            actions.move 'frank', 118, 191, ->
+              actions.go ->
+                {bob, frank} = actions.features
+                should.exist bob
+                should.exist frank
+                actions.board.should.include bob
+                actions.board.should.include frank
+                bob.left.should.eql 32+actions.offset.left
+                bob.top.should.eql 33+actions.offset.top
+                frank.left.should.eql 118+actions.offset.left
+                frank.top.should.eql 191+actions.offset.top
+                done()
+  describe 'pause', ->
+    it 'should complete', (done)->
+      actions = new MockActions
+      actions.pause 1, done
+  describe 'say and says', ->
+    it 'should say "hello bob"', (done)->
+      actions = new MockActions
+      actions.say "hello bob", ->
+        actions.speaker._text.should.equal "hello bob"
+        done()
+    it 'should say frank says "hello bob"', (done)->
+      actions = new MockActions
+      actions.says "frank", "hello bob", ->
+        actions.speaker._text.should.equal 'frank says, "hello bob"'
+        done()
+

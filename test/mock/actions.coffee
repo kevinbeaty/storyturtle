@@ -16,10 +16,16 @@ class MockFeature
     @board.push this
 
   animate: (attrs, time, easing, cb)->
+    {@left, @top} = attrs
+    cb()
+
+class MockSpeaker
+  text: (text)->
+    @_text = text
 
 class MockActions extends Actions
   constructor: (offset={top:10, left:100})->
-    super config, [], {text: ""}, offset
+    super config, [], new MockSpeaker, offset
 
   feature: (type, cb)->
     cb new MockFeature @board, type
