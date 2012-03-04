@@ -60,7 +60,9 @@ init = (game) ->
     gameText = editor.val()
     board.html ""
 
-    parse gameText, new Actions(config, board, speaker), ->
+    actions = new Actions config,
+      board, speaker, board.offset()
+    parse gameText, actions, ->
       speaker.text ""
       controls.show()
 

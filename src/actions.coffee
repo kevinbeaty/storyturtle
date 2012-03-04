@@ -1,6 +1,5 @@
 class Actions
-  constructor: (@config, @board, @speaker)->
-    @offset = @board.offset()
+  constructor: (@config, @board, @speaker, @offset={top:0, left:0})->
     @features = {}
     @moveQueue = []
 
