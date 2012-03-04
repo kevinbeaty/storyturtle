@@ -13,5 +13,5 @@
       "vows": "0.6.x",
       "uglify-js": "1.2.x"
   },
-  "scripts": {"test": "vows --spec test/*"}
+  "scripts": {"test": "vows --spec test/*.coffee"}
 }
