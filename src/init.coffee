@@ -2,14 +2,11 @@
 {parse} = require './parser'
 {Actions} = require './actions'
 
-# Register jquery plugin if in broswer
-$ = {}
-if jQuery?
-  $ = jQuery
-  $.fn.storyturtle = (options) ->
-    config = $.extend true, config, options
-    @each ->
-      init $(@)
+$ = jQuery
+$.fn.storyturtle = (options) ->
+  config = $.extend true, config, options
+  @each ->
+    init $(@)
 
 init = (game) ->
   game.hide()
