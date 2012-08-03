@@ -2,10 +2,10 @@ PROJECT:=storyturtle
 VERSION:=0.0.5
 HOMEPAGE:=http://simplectic.com/story_turtle
 
-JS_SOURCES:=config.js \
-		   actions.js \
-		   parser.js \
-		   init.js
+JS_MODULES:=config \
+		   actions \
+		   parser \
+		   init
 
 .PHONY: clean js test
 
@@ -41,7 +41,7 @@ $(JS_TARGET): build/src/combined.js
 build/src:
 	mkdir -p build/src
 
-build/src/combined.js: $(addprefix build/src/, $(JS_SOURCES))  | build/src
+build/src/combined.js: $(JS_MODULES:%=build/src/%.js) | build/src
 	cat $^ > $@
 	
 build/src/%.js: src/%.js | build/src
