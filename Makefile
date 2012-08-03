@@ -2,10 +2,7 @@ PROJECT:=storyturtle
 VERSION:=0.0.5
 HOMEPAGE:=http://simplectic.com/story_turtle
 
-JS_MODULES:=config \
-		   actions \
-		   parser \
-		   init
+JS_MODULES:=config actions parser init
 
 .PHONY: clean js test
 
