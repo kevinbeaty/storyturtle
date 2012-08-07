@@ -43,6 +43,8 @@ init = (game) ->
     .height(config.controls.height)
     .append(play, edit)
     .appendTo(game)
+    
+  require('./init2')?.init($(game).get(0), config)
 
   storage = store game
   if storedGame = storage.get()

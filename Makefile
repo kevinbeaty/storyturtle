@@ -2,10 +2,10 @@ PROJECT:=storyturtle
 VERSION:=0.0.5
 HOMEPAGE:=http://simplectic.com/story_turtle
 
-JS_MODULES:=config actions parser init
+JS_MODULES:=config runloop featuretype feature context\
+	imageloader actions parser init2 init
 
-.PHONY: clean js test
-
+.PHONY: all clean js test
 all: js
 
 clean:
