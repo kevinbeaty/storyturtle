@@ -20,11 +20,6 @@ init = (game) ->
     .val(game.text())
     .appendTo(game.text(""))
 
-  board = $("<div>")
-    .width(config.board.width)
-    .height(config.board.height)
-    .appendTo(game)
-
   speaker = $("<div>")
     .width(config.controls.width)
     .height(config.controls.height)
@@ -52,15 +47,12 @@ init = (game) ->
     editor.val(storedGame)
 
   play.click ->
-    board.show()
     editor.hide()
     edit.show()
     controls.hide()
     gameText = editor.val()
-    board.html ""
 
-    actions = new Actions config,
-      board, speaker, board.offset()
+    actions = new Actions config, speaker
     parse gameText, actions, ->
       speaker.text ""
       controls.show()
@@ -70,7 +62,6 @@ init = (game) ->
     false
 
   edit.click ->
-    board.hide()
     edit.hide()
     editor.show()
     false

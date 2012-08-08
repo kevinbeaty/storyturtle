@@ -9,5 +9,6 @@ config =
   controls:
     width: 300
     height: 25
+  animationDuration: 1000
 
 exports.config = config
