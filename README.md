@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/simplectic/storyturtle.png)](http://travis-ci.org/simplectic/storyturtle)
+[![Build Status](https://secure.travis-ci.org/kevinbeaty/storyturtle.png)](http://travis-ci.org/kevinbeaty/storyturtle)
 
 Story Turtle is a first introduction to programming for
 my kids (ages 8 and 10).  The grammer, images, and [example
