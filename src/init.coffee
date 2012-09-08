@@ -53,7 +53,7 @@ init = (game) ->
     gameText = editor.val()
 
     actions = new Actions config, speaker
-    parse gameText, actions, ->
+    parse(gameText, actions).then ->
       speaker.text ""
       controls.show()
 

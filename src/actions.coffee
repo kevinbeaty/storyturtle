@@ -5,7 +5,8 @@ class Actions
   constructor: (@config, @speaker)->
     @moveQueue = []
 
-  create: (name, type, x, y, cb)->
+  create: (name, type, x, y)->
+    console.log('create '+name+' '+type+' '+x+' '+y)
     context.removeFeature(name)
 
     feature = context.addFeature(name, type)
@@ -25,13 +26,16 @@ class Actions
 
     feature.size(width, height)
 
-    cb()
+    return true
 
-  die: (name, cb)->
+
+  die: (name)->
+    console.log('die '+name)
     context.removeFeature(name)
-    cb()
+    return true
 
-  move: (name, x, y, cb)->
+  move: (name, x, y)->
+    console.log('move '+name+' '+x+' '+y)
     feature = context.feature(name)
     feature and @moveQueue.push
       feature: feature 
@@ -39,17 +43,20 @@ class Actions
       x2: x
       y1: feature.y
       y2: y
-    cb()
+    return true
 
-  go: (cb)->
+  go: ()->
+    console.log('go')
     move = @moveQueue
     @moveQueue = []
     if move.length
-      @animate(move, cb)
+      return @animate(move)
     else
-      cb()
+      return true 
 
-  animate: (move, cb)->
+  animate: (move)->
+    console.log('begin animate '+move)
+    defer = _r.deferred()
     start = +new Date
     duration = @config.animationDuration or 1000
     runloop.addResponder (now)->
@@ -64,18 +71,23 @@ class Actions
       else
         for f in move 
           f.feature.position(f.x2, f.y2)
-        cb()
+        console.log('done animate '+move)
+        defer.resolve(true)
         return false 
+    return defer
 
-  pause: (time, cb)->
-    setTimeout cb, time * 10
+  pause: (time)->
+    console.log('pause '+time)
+    return _r(true).delay(time * 10)
 
-  say:(text, cb)->
+  say:(text)->
+    console.log('speak '+text)
     @speaker.text text
-    cb()
+    return true
 
-  says: (name, text, cb)->
+  says: (name, text)->
+    console.log(name + ' says '+text)
     @speaker.text "#{name} says, \"#{text}\""
-    cb()
+    return true
 
 exports.Actions = Actions

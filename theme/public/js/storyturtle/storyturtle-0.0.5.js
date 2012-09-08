@@ -384,19 +384,19 @@ var grammer = _r()
   ])
 
 exports.parse = parse
-function parse(text, acts, cb){
+function parse(text, acts){
   actions = acts
   var lines = text.split('\n')
   lines.push('\n') // always "go" at end
   var promise
   lines.forEach(function(line){
     if(promise) {
-      promise = promise.then(_r(line).map(grammer)) 
+      promise = promise.then(_r(line).map(grammer))
     } else {
       promise = _r(line).map(grammer)
     }
   })
-  return promise.then(function(res){console.log('Done '+res); cb()})
+  return promise
   //return _r(lines).mapSeries(grammer).then(function(res){console.log('Done '+res); cb()})
 }
 
@@ -483,7 +483,7 @@ init = function(game) {
     controls.hide();
     gameText = editor.val();
     actions = new Actions(config, speaker);
-    parse(gameText, actions, function() {
+    parse(gameText, actions).then(function() {
       speaker.text("");
       return controls.show();
     });
