@@ -10,13 +10,12 @@ function setCanvas(c){
   canvas = c
   context = canvas.getContext('2d')
 
-  runloop.addResponder(function(){
+  var sub = runloop.subscribe(function(){
     if(!context){
-      return false
-    } 
+      sub.dispose()
+    }
 
     context.clearRect(0, 0, canvas.width, canvas.height)
-    return true
   })
 }
 
@@ -34,17 +33,18 @@ function feature(name){
 
 exports.addFeature = addFeature
 function addFeature(name, typeName){
-  var type = types[typeName] 
+  var type = types[typeName]
     , feature = new Feature(name, type)
+    , sub = runloop.subscribe(function(){
+        var img = feature.type.canvas
+        context.drawImage(img,
+          0, 0, img.width, img.height,
+          feature.x, feature.y, feature.width, feature.height)
+        if(!feature.alive){
+          sub.dispose()
+        }
+      })
   features[name] = feature
-
-  runloop.addResponder(function(){
-    var img = feature.type.canvas
-    context.drawImage(img, 
-      0, 0, img.width, img.height, 
-      feature.x, feature.y, feature.width, feature.height)
-    return feature.alive
-  })
   return feature
 }
 

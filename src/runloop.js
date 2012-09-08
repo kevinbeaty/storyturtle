@@ -1,5 +1,4 @@
-var running = false
-  , responders = []
+var deferred = null
   , lastTime = 0
   , raf =  root.requestAnimationFrame 
         || root.webkitRequestAnimationFrame
@@ -16,53 +15,30 @@ var running = false
         }
   ;
 
+exports.subscribe = subscribe
+function subscribe(responder){
+  return run().subscribe(responder)
+}
+
 exports.run = run 
 function run(){
-  if(!running){
-    running = true
+  if(!deferred){
+    deferred = _r.deferred()
     loop() 
   }
+  return deferred
 }
 
 exports.stop = stop
 function stop(){
-  running = false
+  deferred.complete()
+  deferred = null
 }
 
-exports.addResponder = addResponder
-function addResponder(responder){
-  responders.push(responder)
-  if(!running) run()
-}
 
 function loop(){
-  if(running){
+  if(deferred){
     raf(loop)
-    respond()
-  }
-}
-
-function respond(){
-  var responder
-    , i = 0
-    , len = responders.length
-    , finished = false
-
-  var curTime = +new Date()
-  for(; i < len; ++i){
-    try {
-      finished = !responders[i](curTime)
-    } catch(e){
-      finished = true
-    }
-
-    if(finished){
-      responders.splice(i, 1)
-      len--
-    }
-  }
-
-  if(len <= 0){
-    stop()
+    deferred.next(+new Date)
   }
 }

@@ -56,7 +56,7 @@ function parse(text, acts){
   var lines = text.split('\n')
   lines.push('\n') // always "go" at end
   var promise
-  lines.forEach(function(line){
+  _r(lines).each(function(line){
     if(promise) {
       promise = promise.then(_r(line).map(grammer))
     } else {

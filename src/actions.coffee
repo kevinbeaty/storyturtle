@@ -59,7 +59,7 @@ class Actions
     defer = _r.deferred()
     start = +new Date
     duration = @config.animationDuration or 1000
-    runloop.addResponder (now)->
+    sub = runloop.subscribe (now)->
       percent = (now - start)/duration
       if percent < 1
         for f in move 
@@ -67,13 +67,12 @@ class Actions
             f.x1 + (f.x2 - f.x1)*percent
             f.y1 + (f.y2 - f.y1)*percent
           )
-        return true 
       else
         for f in move 
           f.feature.position(f.x2, f.y2)
         console.log('done animate '+move)
         defer.resolve(true)
-        return false 
+        sub.dispose()
     return defer
 
   pause: (time)->
