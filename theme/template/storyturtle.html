@@ -1,0 +1,27 @@
+{% extends "jquery.html" %}
+{% block endbody %}
+{{ super() }}
+    <script src="/js/underarm/underarm-0.0.1.js"></script>
+    <script src="/js/storyturtle/storyturtle-0.0.5.js"></script>
+    <script>
+        $(function(){
+            characters = [
+                'jellyfish',
+                'leopard',
+                'lizard',
+                'pufferfish',
+                'shark',
+                'shrimp',
+                'turtle'];
+            images = {}
+            $.each(characters, function(i, character){
+                images[character] = "/img/storyturtle/"+character+".png";
+            });
+
+            $(".story").storyturtle({images:images});
+        });
+    </script>
+    <style type="text/css">
+        .story {display: none; }
+    </style>
+{% endblock %}

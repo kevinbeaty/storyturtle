@@ -1,15 +1,20 @@
 PROJECT:=storyturtle
 VERSION:=0.0.5
-HOMEPAGE:=http://simplectic.com/story_turtle
+HOMEPAGE:=http://github.com/kevinbeaty/storyturtle
 
 JS_MODULES:=config runloop featuretype feature context\
 	imageloader actions parser init2 init
 
-.PHONY: all clean js test
-all: js
+STORIES:=$(wildcard stories/*.txt)
+
+.PHONY: all clean js test serve stories
+all: js stories
 
 clean:
 	rm -rf build
+
+serve:
+	mvw
 
 test: | node_modules
 	npm test
@@ -27,12 +32,12 @@ node_modules:
 	gzip -c9 $^ > $@
 
 # JavaScript
-JS_TARGET?=build/$(PROJECT)-$(VERSION).js
+JS_TARGET?=theme/public/js/storyturtle/$(PROJECT)-$(VERSION).js
 js: $(JS_TARGET) $(JS_TARGET:.js=.min.js) $(JS_TARGET:.js=.min.js.gz)
 
-$(JS_TARGET): build/src/combined.js 
-	echo "$$JS_HEADER" > $@ 
-	cat $< >> $@ 
+$(JS_TARGET): build/src/combined.js
+	echo "$$JS_HEADER" > $@
+	cat $< >> $@
 	echo $(JS_FOOTER) >> $@
 
 build/src:
@@ -40,12 +45,11 @@ build/src:
 
 build/src/combined.js: $(JS_MODULES:%=build/src/%.js) | build/src
 	cat $^ > $@
-	
+
 build/src/%.js: src/%.js | build/src
 	echo $(JS_MODULE_HEADER) > $@
 	cat $< >> $@
 	echo $(JS_MODULE_FOOTER) >> $@
-
 
 define JS_HEADER
 /* $(PROJECT) v$(VERSION) | $(HOMEPAGE) | License: MIT */
@@ -63,3 +67,26 @@ JS_MODULE_FOOTER="return exports; })({})"
 
 JS_FOOTER="}(this))"
 
+# Stories
+stories: $(addprefix build/stories/, $(notdir $(STORIES:.txt=.md))) | build/stories
+
+build/stories:
+	mkdir -p build/stories
+
+build/stories/%.md: stories/%.txt | build/stories
+	echo "$$STORY_HEADER" > $@
+	echo $(STORY_MODULE_HEADER) >> $@
+	cat $< >> $@
+	echo $(STORY_MODULE_FOOTER) >> $@
+	echo $(STORY_FOOTER) >> $@
+
+define STORY_HEADER
+theme:storyturtle
+
+endef
+export STORY_HEADER
+
+STORY_MODULE_HEADER='<div class="story" data-story="$(notdir $(basename $@))">'
+STORY_MODULE_FOOTER='</div>'
+
+STORY_FOOTER=
