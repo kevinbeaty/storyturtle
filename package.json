@@ -9,9 +9,6 @@
   "keywords": [],
   "dependencies": {},
   "devDependencies": {
-      "mocha": "0.14.x",
-      "should": "0.6.x",
       "uglify-js": "1.2.x"
-  },
-  "scripts": {"test": "mocha -C -R spec test/*.coffee"}
+  }
 }
