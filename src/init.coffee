@@ -1,4 +1,18 @@
-{config} = require './config'
+config =
+  images: {} # Maps image type to URL
+  board:
+    width: 300
+    height: 300
+  editor:
+    rows: 15
+    cols: 30
+  controls:
+    width: 300
+    height: 25
+  animationDuration: 1000
+
+exports.config = config
+
 context = require './context'
 {parse} = require './parser'
 
@@ -55,7 +69,7 @@ init = (game) ->
     controls.hide()
     gameText = editor.val()
 
-    parse(gameText).then ->
+    parse(gameText, config).then ->
       speaker.text ""
       controls.show()
 

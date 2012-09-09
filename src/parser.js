@@ -1,6 +1,6 @@
 var context = require('./context')
   , runloop = require('./runloop')
-  , config = require('./config').config
+  , config = {}
   , moveQueue = []
   , create = function(name, type, x, y){
       context.removeFeature(name)
@@ -105,7 +105,10 @@ var context = require('./context')
         .map(go)
   ])
 
-function parse(text){
+function parse(text, conf){
+  config = conf || config
+  moveQueue = []
+
   var lines = text.split('\n')
   lines.push('\n') // always "go" at end
   var promise
