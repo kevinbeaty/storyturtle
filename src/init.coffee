@@ -1,6 +1,6 @@
 {config} = require './config'
+context = require './context'
 {parse} = require './parser'
-{Actions} = require './actions'
 
 $ = jQuery
 $.fn.storyturtle = (options) ->
@@ -24,6 +24,9 @@ init = (game) ->
     .width(config.controls.width)
     .height(config.controls.height)
     .appendTo(game)
+  context.setSpeaker (text)->
+    speaker.text text
+
 
   play = $("<a>", href:'#')
     .text("Play!")
@@ -52,8 +55,7 @@ init = (game) ->
     controls.hide()
     gameText = editor.val()
 
-    actions = new Actions config, speaker
-    parse(gameText, actions).then ->
+    parse(gameText).then ->
       speaker.text ""
       controls.show()
 

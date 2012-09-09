@@ -3,7 +3,7 @@ VERSION:=0.0.5
 HOMEPAGE:=http://github.com/kevinbeaty/storyturtle
 
 JS_MODULES:=config runloop featuretype feature context\
-	imageloader actions parser init2 init
+	imageloader parser init2 init
 
 STORIES:=$(wildcard stories/*.txt)
 

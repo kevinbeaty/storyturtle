@@ -19,6 +19,11 @@ function setCanvas(c){
   })
 }
 
+exports.setSpeaker = setSpeaker
+function setSpeaker(fun){
+  exports.speak = fun
+}
+
 exports.addFeatureType = addFeatureType
 function addFeatureType(name, canvas){
   var featureType = new FeatureType(name, canvas)
