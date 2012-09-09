@@ -9,7 +9,6 @@
   "keywords": [],
   "dependencies": {},
   "devDependencies": {
-      "coffee-script": "1.2.x",
       "mocha": "0.14.x",
       "should": "0.6.x",
       "uglify-js": "1.2.x"

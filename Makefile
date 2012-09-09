@@ -2,7 +2,7 @@ PROJECT:=storyturtle
 VERSION:=0.0.5
 HOMEPAGE:=http://github.com/kevinbeaty/storyturtle
 
-JS_MODULES:=config runloop featuretype feature context\
+JS_MODULES:=runloop featuretype feature context\
 	imageloader parser init2 init
 
 STORIES:=$(wildcard stories/*.txt)
@@ -21,9 +21,6 @@ test: | node_modules
 
 node_modules:
 	npm install
-
-%.js: %.coffee | node_modules
-	node_modules/coffee-script/bin/coffee -cb $< > $@
 
 %.min.js: %.js | node_modules
 	node_modules/uglify-js/bin/uglifyjs $< > $@
