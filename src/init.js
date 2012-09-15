@@ -1,80 +1,67 @@
 var config = {
     images: {} // Maps image type to URL
-  , board: {width: 300, height: 300}
-  , editor: {rows: 15, cols: 30}
-  , controls: {width: 300, height: 25}
-  , animationDuration: 1000
+  , imageDimension: 30 // min dimension of images (aspect ratio maintained)
+  , animationDuration: 1000 // duration of move animations, in milliseconds
   }
 , context = require('./context')
 , parse = require('./parser').parse
-, store = function(game){return {
-      set: function(text){
-        var name = game.data('story')
-        if(name && localStorage)
-          localStorage.setItem('storyturtle_'+name, text)
-      }
+, loadImages = require('./imageloader').loadImages
+, el = function(id){return document.getElementById('storyturtle-'+id)}
+, on = function(el, type, listener){el.addEventListener(type, listener)}
+, display = function(el, type){el.style.display = type}
+, hide = function(el){display(el, 'none')}
+, show = function(el, type){display(el, type || 'block')}
 
-    , get: function(){
-        var name = game.data('story')
-        return name && localStorage && localStorage.getItem('storyturtle_'+name)
-      }
-  }}
+exports.init = init
+function init(options){
+  _r(options)
+    .defaults(config)
+    .first()
+    .then(
+      function(conf){
+        config = conf
+        return loadImages(config.images)
+          .then(null, null, addFeatureType)
+      })
+    .then(function(){
+      initElements()
+    })
+}
 
-, $ = jQuery
-, init = function(game){
-  game.hide()
-    .width(Math.max(config.board.width, config.controls.width))
-    .height(config.board.height+config.controls.height)
-
-  var editor = $('<textarea>',
-      { rows: config.editor.rows
-      , cols: config.editor.cols})
-    .hide()
-    .val(game.text())
-    .appendTo(game.text(''))
-
-  , speaker = $('<div>')
-    .width(config.controls.width)
-    .height(config.controls.height)
-    .appendTo(game)
-
-  , play = $('<a>', {href:'#'})
-    .text('Play!')
-    .css({'float': 'left'})
-
-  , edit = $('<a>', {href: '#'})
-    .text('Edit')
-    .css({'float': 'right'})
-
-  , controls = $('<div>')
-    .width(config.controls.width)
-    .height(config.controls.height)
-    .append(play, edit)
-    .appendTo(game)
-
-  , storage = store(game)
+function initElements(){
+  var editor = el('story')
+  , canvas = el('canvas')
+  , speaker = el('speaker')
+  , controls = el('controls')
+  , play = el('play')
+  , edit = el('edit')
+  , storage = store(editor)
   , storedGame = storage.get()
 
-  require('./init2').init($(game).get(0), config)
+  context.setCanvas(canvas)
 
   context.setSpeaker(function(text){
-    speaker.text(text)
+    var child = speaker.firstChild
+    for(; child !== null; child = speaker.firstChild)
+      speaker.removeChild(child)
+    speaker.appendChild(document.createTextNode(text))
   })
 
   if(storedGame){
     // If we previously stored game, load it
-    editor.val(storedGame)
+    editor.value = storedGame
   }
 
-  play.click(function(){
-    editor.hide()
-    edit.show()
-    controls.hide()
-    gameText = editor.val()
+  on(play, 'click', function(){
+    show(canvas)
+    hide(editor)
+    show(edit)
+    hide(controls)
+    gameText = editor.value
 
     parse(gameText, config).then(function(){
-      speaker.text('')
-      controls.show()
+      speaker.innerHTML = ''
+      show(controls)
     })
 
     storage.set(gameText)
@@ -82,18 +69,34 @@ var config = {
     return false
   })
 
-  edit.click(function(){
-    edit.hide()
-    editor.show()
+  on(edit, 'click', function(){
+    hide(canvas)
+    hide(edit)
+    show(editor)
     return false
   })
-
-  game.show()
 }
 
-$.fn.storyturtle = function(options){
-  config = $.extend(true, config, options)
-  this.each(function(){
-    init($(this))
-  })
+function addFeatureType(image){
+  var img = image.image
+    , name = image.name
+    , canvas = document.createElement('canvas')
+  canvas.width = img.width
+  canvas.height = img.height
+  context2d = canvas.getContext('2d')
+  context2d.drawImage(img, 0, 0)
+  context.addFeatureType(name, canvas)
 }
+
+function store(game){return {
+    set: function(text){
+      var name = game.getAttribute('data-story')
+      if(name && localStorage)
+        localStorage.setItem('storyturtle_'+name, text)
+    }
+
+  , get: function(){
+      var name = game.getAttribute('data-story')
+      return name && localStorage && localStorage.getItem('storyturtle_'+name)
+    }
+}}

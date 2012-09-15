@@ -6,7 +6,7 @@ var context = require('./context')
       context.removeFeature(name)
       var feature = context.addFeature(name, type)
         , img = feature.type.canvas
-        , dim = config.board.width / 10
+        , dim = config.imageDimension || 30
         , width = img.width || dim
         , height = img.height || dim
         , scale = dim/height

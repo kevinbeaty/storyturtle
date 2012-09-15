@@ -1,9 +1,19 @@
-[![Build Status](https://secure.travis-ci.org/kevinbeaty/storyturtle.png)](http://travis-ci.org/kevinbeaty/storyturtle)
+Story Turtle was a first introduction to programming for
+my kids (aged 8 and 10).  The grammer, images, and example
+stories were their own creation, as described below.
 
-Story Turtle is a first introduction to programming for
-my kids (ages 8 and 10).  The grammer, images, and example
-storieswere their own creation, as described below.
+My initial goal was to create something very similar to 
+[Khan CS](http://www.khanacademy.org/cs/), which is obviously more 
+fully baked.
 
+It has since become my "go to" script for exploring random technologies:
+CoffeeScript, Makefiles for JavaScript, node.js, mocha, canvas, underarm, etc.
+
+It is now admittedly over-engineered, but the point is exploration.
+
+The kids have moved on to writing their own HTML/CSS.  They still love
+"telling computers what to do".  It continues to be a thrill to experience
+their neverending curiosity and sense of wonder.
 
 ## Writing a Story
 

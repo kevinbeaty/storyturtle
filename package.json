@@ -7,7 +7,9 @@
   "homepage": ["http://simplectic.com/story_turtle"],
   "repository": {"type": "git", "url": "git://github.com/simplectic/storyturtle.git"},
   "keywords": [],
-  "dependencies": {},
+  "dependencies": {
+    "underarm": "0.0.x"
+  },
   "devDependencies": {
       "uglify-js": "1.2.x"
   }
